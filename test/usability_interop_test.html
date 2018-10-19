@@ -1,0 +1,43 @@
+<html>
+  <body>
+    <script>
+      function Animal(name) {
+        this.name = name;
+        Object.defineProperty(this, 'nameGetSet', {
+          get: function() { return this.name; },
+          set: function(val) { this.name = val; }
+        });
+      }
+      Animal.prototype.talk = function() {
+        return 'I am a ' + this.name;
+      };
+      Animal.staticName = 'Animal';
+      Animal.staticTalk =  function() {
+        return 'I am an ' + Animal.staticName;
+      }
+
+      //
+      // Using classes causes the above class-like Animal to stop working and
+      // fail all tests. (dart.global.Animal is not a constructor)
+      //
+
+      // window.AnimalClass = class {
+      //   constructor(name) {
+      //     this.name = name;
+      //   }
+      //   talk() { return 'I am a ' + this.name; }
+      //   get nameGetSet() { return this.name; }
+      //   set nameGetSet(val) { this.name = val; }
+
+      //   static staticName = 'Animal';
+      //   static staticTalk() {
+      //     return 'I am an ' + AnimalClass.staticName;
+      //   }
+      // };
+    </script>
+
+    <!-- Scaffolding for tests. Not required in real applications. -->
+    <script src="packages/test/dart.js"></script>
+    <link href="changeability_interop_test.dart" rel="x-dart-test" />
+  </body>
+</html>
