@@ -11,6 +11,9 @@
       Animal.prototype.talk = function() {
         return 'I am a ' + this.name;
       };
+      Animal.prototype.talk2 = function() {
+        return 'I am a ' + this.name;
+      };
       Animal.staticName = 'Animal';
       Animal.staticTalk =  function() {
         return 'I am an ' + Animal.staticName;
@@ -20,8 +23,10 @@
       // Using classes causes the above class-like Animal to stop working and
       // fail all tests. (dart.global.Animal is not a constructor)
       //
+      // Another type of failure: this *_test.dart never compiles.
+      //
 
-      // window.AnimalClass = class {
+      // class AnimalClass {
       //   constructor(name) {
       //     this.name = name;
       //   }
@@ -34,10 +39,11 @@
       //     return 'I am an ' + AnimalClass.staticName;
       //   }
       // };
+      var intValue = 1;
+      var doubleValue = 1.1;
     </script>
 
-    <!-- Scaffolding for tests. Not required in real applications. -->
     <script src="packages/test/dart.js"></script>
-    <link href="changeability_interop_test.dart" rel="x-dart-test" />
+    <link href="usability_interop_test.dart" rel="x-dart-test" />
   </body>
 </html>

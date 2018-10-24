@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="scaffolded-by" content="https://github.com/google/stagehand">
+    <title>example</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico">
+    <script defer src="main.dart.js"></script>
+</head>
+
+<body>
+
+  <div id="output"></div>
+  <script>
+    class AnimalClass {
+      constructor(name) {
+        this.name = name;
+      }
+      talk() { return 'I am a ' + this.name; }
+      get nameGetSet() { return this.name; }
+      set nameGetSet(val) { this.name = val; }
+
+      // static staticName = 'Animal';
+      // static staticTalk() {
+      //   return 'I am an ' + AnimalClass.staticName;
+      // }
+    };
+    window.AnimalClass = AnimalClass;
+
+    function passCtor(ctor) {
+      console.log('ctor', ctor);
+      console.log('ctor result', new ctor());
+    }
+
+    class CustomElement extends HTMLElement {
+      connectedCallback() {
+        this.innerHTML = '<div>Connected</div>';
+      }
+    }
+    window.CustomElement = CustomElement;
+    customElements.define('custom-el', CustomElement);
+
+    function defineElement(name, construct) {
+      customElements.define(name, class extends HTMLElement {
+        constructor() {
+          super();
+          construct(this);
+        }
+      });
+    };
+
+  </script>
+</body>
+</html>
