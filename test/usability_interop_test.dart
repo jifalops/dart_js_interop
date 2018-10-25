@@ -120,12 +120,27 @@ external double get doubleValue;
 @JS('intValue')
 external double get doubleValue2;
 
-
 @JS('doubleValue')
 external int get intValue2;
 
+@JS()
+external List caller(prop, oldVal, newVal);
+
+/// Dart references to JS callback functions must include each arg passed by JS.
+/// The dart version may specify additional, unused, parameters.
+@JS()
+external  fn(void Function(int) f);
+
+bool func(arg) => true;
+
 void main() {
   print('isDartDevC: $isDartDevC, isDart2JS: $isDart2JS');
+
+  test('can declare function signature', () {
+    expect(caller('1', 'a', 'b'), [10]);
+    // expect(fn((){}), 'x');
+    expect(fn(allowInterop((a) => func)), 'x');
+  });
 
   test('can use int and double', () {
     expect(intValue, 1);

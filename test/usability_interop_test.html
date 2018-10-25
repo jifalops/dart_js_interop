@@ -41,6 +41,15 @@
       // };
       var intValue = 1;
       var doubleValue = 1.1;
+
+      console.log(customElements);
+
+      function caller(prop, oldVal, newVal) {
+        console.log(prop, oldVal, newVal);
+        return [10];
+      }
+
+      function fn(f) { f(3); return 'x';}
     </script>
 
     <script src="packages/test/dart.js"></script>
