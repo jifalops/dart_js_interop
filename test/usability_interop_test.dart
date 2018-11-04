@@ -5,6 +5,10 @@ library test.changeability_interop;
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
+abstract class IAnimal {
+  String name;
+}
+
 // Hack to detect whether we are running in DDC or Dart2JS.
 @JS(r'$dartLoader')
 external Object get _$dartLoader;
@@ -16,10 +20,8 @@ final bool isDart2JS = !isDartDevC;
 // }
 
 @JS()
-class Animal /*extends Thing*/ {
+abstract class Animal /*extends Thing*/ implements IAnimal {
   external factory Animal(String name);
-  external String get name;
-  external void set name(String value);
   external String talk();
   external String talk2();
   external String get nameGetSet;
@@ -27,6 +29,7 @@ class Animal /*extends Thing*/ {
   external static String get staticName;
   external static void set staticName(String value);
   external static String staticTalk();
+
 
   Animal.dart(this.dartName, this.dartName2);
   String dartName = 'Dart';
@@ -96,20 +99,20 @@ abstract class AbstractAnimal {
 //   // static String dartStaticConstTalk() => 'I am an $dartStaticConstName';
 // }
 
-class Dog extends Animal {
-  Dog(String name, [this.age = 1]) : super.dart(name, name);
-  num age;
-  num get ageGetSet => age;
-  void set ageGetSet(num value) => age = value;
+// class Dog extends Animal {
+//   Dog(String name, [this.age = 1]) : super.dart(name, name);
+//   num age;
+//   num get ageGetSet => age;
+//   void set ageGetSet(num value) => age = value;
 
-  String bark() => 'Ruff!';
-  @override
-  String talk2() => 'I am $age years old.';
+//   String bark() => 'Ruff!';
+//   @override
+//   String talk2() => 'I am $age years old.';
 
-  static String staticName = 'Dog';
-  static const String staticConstName = 'Dog';
-  static String staticTalk() => 'I am a $staticName';
-}
+//   static String staticName = 'Dog';
+//   static const String staticConstName = 'Dog';
+//   static String staticTalk() => 'I am a $staticName';
+// }
 
 @JS()
 external int get intValue;
@@ -124,7 +127,7 @@ external double get doubleValue2;
 external int get intValue2;
 
 @JS()
-external List caller(prop, oldVal, newVal);
+external SomeFunc get caller;
 
 /// Dart references to JS callback functions must include each arg passed by JS.
 /// The dart version may specify additional, unused, parameters.
@@ -133,12 +136,13 @@ external  fn(void Function(int) f);
 
 bool func(arg) => true;
 
+typedef List SomeFunc(a,b,c);
+
 void main() {
   print('isDartDevC: $isDartDevC, isDart2JS: $isDart2JS');
 
   test('can declare function signature', () {
     expect(caller('1', 'a', 'b'), [10]);
-    // expect(fn((){}), 'x');
     expect(fn(allowInterop((a) => func)), 'x');
   });
 
@@ -196,18 +200,18 @@ void main() {
       /// In DDC, this seems to alias the JS constructor function.
       /// In Dart2JS, this seems to create an object that does not contain
       /// the JS methods.
-      final animal = Animal.dart('Dog', 'Cat');
+      // final animal = Animal.dart('Dog', 'Cat');
       final animalJs = Animal('Dog');
 
       /// @JS() classes cannot add properties.
-      expect(animal.dartName, null);
-      expect(animal.dartName2, null);
-      expect(animal.dartName3, null);
+      // expect(animal.dartName, null);
+      // expect(animal.dartName2, null);
+      // expect(animal.dartName3, null);
       expect(animalJs.dartName, null);
       expect(animalJs.dartName2, null);
       expect(animalJs.dartName3, null);
       if (isDartDevC) {
-        expect(animal.name, 'Dog');
+        // expect(animal.name, 'Dog');
 
         /// In DDC, static properties are null and static methods throw
         /// `NoSuchMethodError`. However, the talk() method still works.
@@ -215,9 +219,9 @@ void main() {
         expect(Animal.dartStaticConstName, null);
         // TODO: catch this error
         // expect(Animal.dartStaticTalk(), throwsNoSuchMethodError);
-        expect(animal.talk(), 'I am a Dog');
+        // expect(animal.talk(), 'I am a Dog');
       } else if (isDart2JS) {
-        expect(animal.name, null);
+        // expect(animal.name, null);
 
         /// Static properties and methods work in Dart2JS only.
         /// However, the talk() method no longer exists.
@@ -227,8 +231,8 @@ void main() {
         // TODO: catch this error
         // expect(animal.talk(), throwsNoSuchMethodError);
       }
-      animal.name = 'Cat';
-      expect(animal.name, 'Cat');
+      // animal.name = 'Cat';
+      // expect(animal.name, 'Cat');
     });
   });
 

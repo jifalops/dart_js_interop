@@ -49,7 +49,10 @@
         return [10];
       }
 
-      function fn(f) { f(3); return 'x';}
+      function fn(f) {
+        var ret = f(3);
+        console.log(ret);
+        return 'x';}
     </script>
 
     <script src="packages/test/dart.js"></script>
